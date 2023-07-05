@@ -32,7 +32,7 @@ describe('Render functions', () => {
     )
 
     const expectedComment = `### Code Coverage
-|File|Coverage [65.50%]|:-:|
+|File|Coverage [65.50%]|Min. Covered|
 |:-|:-:|:-:|
 |[Details.kt](file-url)|65.50%|:hankey:|
 
@@ -64,7 +64,7 @@ describe('Render functions', () => {
       70.0
     )
 
-    const expectedComment = `|File|Coverage [65.50%]|:-:|
+    const expectedComment = `|File|Coverage [65.50%]|Min. Covered|
 |:-|:-:|:-:|
 |[Details.kt](file-url)|65.50%|:hankey:|
 

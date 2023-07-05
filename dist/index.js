@@ -275,17 +275,11 @@ const createComment = (title, coverage, changedFilesCoverage, minCoverageOverall
     if (changedFilesCoverage.files.length > 0) {
         const filesTableRows = changedFilesCoverage.files
             .map(file => {
-            const emoji = minCoverageChangedFiles
-                ? (0, exports.renderEmoji)(file.percentage, minCoverageChangedFiles)
-                : '';
-            const fileName = file.filePath.split('/').pop();
-            return `|[${fileName}](${file.url})|${file.percentage.toFixed(2)}%|${emoji}`;
+            return buildFileRow(file, minCoverageChangedFiles);
         })
             .join('\n');
-        const emojiHeader = minCoverageChangedFiles ? ':-:|' : '';
-        const filesTableHeader = `|File|Coverage [${changedFilesCoverage.percentage.toFixed(2)}%]|${emojiHeader}\n`;
-        const filesTableSubHeader = `|:-|:-:|${emojiHeader}\n`;
-        changedFilesMarkdown = `${filesTableHeader}${filesTableSubHeader}${filesTableRows}\n\n`;
+        const header = buildHeader(changedFilesCoverage, minCoverageChangedFiles);
+        changedFilesMarkdown = `${header}${filesTableRows}\n\n`;
     }
     // Build total coverage markdown
     const totalEmoji = minCoverageOverall
@@ -299,6 +293,28 @@ const createComment = (title, coverage, changedFilesCoverage, minCoverageOverall
 exports.createComment = createComment;
 const renderEmoji = (percentage, minPercentage) => (percentage >= minPercentage ? ':white_check_mark:|' : ':hankey:|');
 exports.renderEmoji = renderEmoji;
+function buildFileRow(file, minCoverageChangedFiles) {
+    const filePercentage = file.percentage.toFixed(2);
+    const emoji = minCoverageChangedFiles
+        ? (0, exports.renderEmoji)(file.percentage, minCoverageChangedFiles)
+        : '';
+    const fileName = file.filePath.split('/').pop();
+    return `|[${fileName}](${file.url})|${filePercentage}%|${emoji}`;
+}
+function buildHeader(changedFilesCoverage, minCoverageChangedFiles) {
+    let filesTableHeader;
+    let filesTableSubHeader;
+    const filesCoveredPercentage = changedFilesCoverage.percentage.toFixed(2);
+    if (minCoverageChangedFiles) {
+        filesTableHeader = `|File|Coverage [${filesCoveredPercentage}%]|Min. Covered|\n`;
+        filesTableSubHeader = `|:-|:-:|:-:|\n`;
+    }
+    else {
+        filesTableHeader = `|File|Coverage [${filesCoveredPercentage}%]|\n`;
+        filesTableSubHeader = `|:-|:-:|\n`;
+    }
+    return `${filesTableHeader}${filesTableSubHeader}`;
+}
 
 
 /***/ }),

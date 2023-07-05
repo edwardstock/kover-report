@@ -1,4 +1,8 @@
-import {ChangedFilesCoverage, Coverage} from './types.d'
+import {
+  ChangedFilesCoverage,
+  ChangedFileWithCoverage,
+  Coverage
+} from './types.d'
 
 export const createComment = (
   title: string | undefined,
@@ -15,23 +19,13 @@ export const createComment = (
   if (changedFilesCoverage.files.length > 0) {
     const filesTableRows = changedFilesCoverage.files
       .map(file => {
-        const emoji = minCoverageChangedFiles
-          ? renderEmoji(file.percentage, minCoverageChangedFiles)
-          : ''
-        const fileName = file.filePath.split('/').pop()
-        return `|[${fileName}](${file.url})|${file.percentage.toFixed(
-          2
-        )}%|${emoji}`
+        return buildFileRow(file, minCoverageChangedFiles)
       })
       .join('\n')
 
-    const emojiHeader = minCoverageChangedFiles ? ':-:|' : ''
-    const filesTableHeader = `|File|Coverage [${changedFilesCoverage.percentage.toFixed(
-      2
-    )}%]|${emojiHeader}\n`
-    const filesTableSubHeader = `|:-|:-:|${emojiHeader}\n`
+    const header = buildHeader(changedFilesCoverage, minCoverageChangedFiles)
 
-    changedFilesMarkdown = `${filesTableHeader}${filesTableSubHeader}${filesTableRows}\n\n`
+    changedFilesMarkdown = `${header}${filesTableRows}\n\n`
   }
 
   // Build total coverage markdown
@@ -51,3 +45,34 @@ export const renderEmoji = (
   percentage: number,
   minPercentage: number
 ): string => (percentage >= minPercentage ? ':white_check_mark:|' : ':hankey:|')
+
+function buildFileRow(
+  file: ChangedFileWithCoverage,
+  minCoverageChangedFiles: number | undefined
+): string {
+  const filePercentage = file.percentage.toFixed(2)
+  const emoji = minCoverageChangedFiles
+    ? renderEmoji(file.percentage, minCoverageChangedFiles)
+    : ''
+  const fileName = file.filePath.split('/').pop()
+  return `|[${fileName}](${file.url})|${filePercentage}%|${emoji}`
+}
+
+function buildHeader(
+  changedFilesCoverage: ChangedFilesCoverage,
+  minCoverageChangedFiles: number | undefined
+): string {
+  let filesTableHeader: string
+  let filesTableSubHeader: string
+
+  const filesCoveredPercentage = changedFilesCoverage.percentage.toFixed(2)
+  if (minCoverageChangedFiles) {
+    filesTableHeader = `|File|Coverage [${filesCoveredPercentage}%]|Min. Covered|\n`
+    filesTableSubHeader = `|:-|:-:|:-:|\n`
+  } else {
+    filesTableHeader = `|File|Coverage [${filesCoveredPercentage}%]|\n`
+    filesTableSubHeader = `|:-|:-:|\n`
+  }
+
+  return `${filesTableHeader}${filesTableSubHeader}`
+}
