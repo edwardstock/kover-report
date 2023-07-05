@@ -1,7 +1,7 @@
 import * as actionsCore from '@actions/core'
 import * as actionsGithub from '@actions/github'
 import {createComment} from './render'
-import {parseReport, getOverallCoverage, getFileCoverage} from './reader'
+import {getFileCoverage, getOverallCoverage, parseReport} from './reader'
 import {ChangedFile, CounterType} from './types.d'
 
 export const run = async (
