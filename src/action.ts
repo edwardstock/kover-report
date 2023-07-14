@@ -80,7 +80,7 @@ export const run = async (
     const reportsCoverage = getOverallCoverage(report, counterType)
     overallCoverage.missed += reportsCoverage?.missed ?? 0
     overallCoverage.covered += reportsCoverage?.covered ?? 0
-    overallCoverage.percentage = reportsCoverage?.percentage ?? 0
+    overallCoverage.percentage += reportsCoverage?.percentage ?? 0
 
     const reportsFilesCovered = getFileCoverage(
       report,

@@ -68,7 +68,7 @@ const run = (core, github) => __awaiter(void 0, void 0, void 0, function* () {
         const reportsCoverage = (0, reader_1.getOverallCoverage)(report, counterType);
         overallCoverage.missed += (_a = reportsCoverage === null || reportsCoverage === void 0 ? void 0 : reportsCoverage.missed) !== null && _a !== void 0 ? _a : 0;
         overallCoverage.covered += (_b = reportsCoverage === null || reportsCoverage === void 0 ? void 0 : reportsCoverage.covered) !== null && _b !== void 0 ? _b : 0;
-        overallCoverage.percentage = (_c = reportsCoverage === null || reportsCoverage === void 0 ? void 0 : reportsCoverage.percentage) !== null && _c !== void 0 ? _c : 0;
+        overallCoverage.percentage += (_c = reportsCoverage === null || reportsCoverage === void 0 ? void 0 : reportsCoverage.percentage) !== null && _c !== void 0 ? _c : 0;
         const reportsFilesCovered = (0, reader_1.getFileCoverage)(report, changedFiles, counterType);
         overallFilesCoverage.percentage += reportsFilesCovered.percentage;
         overallFilesCoverage.files = overallFilesCoverage.files.concat(reportsFilesCovered.files);
